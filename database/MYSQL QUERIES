@@ -1,0 +1,168 @@
+/* Table resolved_news_type */
+
+mysql> create table resolved_news_type(id SMALLINT NOT NULL AUTO_INCREMENT,resolved_news_type_name varchar(250) NOT NULL  UNIQUE,PRIMARY KEY(id));
+
+mysql> describe resolved_news_type;
++-------------------------+--------------+------+-----+---------+----------------+
+| Field                   | Type         | Null | Key | Default | Extra          |
++-------------------------+--------------+------+-----+---------+----------------+
+| id                      | smallint(6)  | NO   | PRI | NULL    | auto_increment |
+| resolved_news_type_name | varchar(250) | NO   | UNI | NULL    |                |
++-------------------------+--------------+------+-----+---------+----------------+
+
+/* Table unresolved_news_type */
+mysql> create table unresolved_news_type(id SMALLINT NOT NULL AUTO_INCREMENT,unresolved_news_type_name varchar(250),PRIMARY KEY(id));
+
+mysql> describe unresolved_news_type;
++---------------------------+--------------+------+-----+---------+----------------+
+| Field                     | Type         | Null | Key | Default | Extra          |
++---------------------------+--------------+------+-----+---------+----------------+
+| id                        | smallint(6)  | NO   | PRI | NULL    | auto_increment |
+| unresolved_news_type_name | varchar(250) | YES  |     | NULL    |                |
++---------------------------+--------------+------+-----+---------+----------------+
+
+/* Table map_unresolved_resolved_news_type_map */
+mysql> create table map_unresolved_resolved_news_type_map(id SMALLINT NOT NULL AUTO_INCREMENT,resolved_news_type_id SMALLINT NOT NULL,INDEX(resolved_news_type_id),unresolved_news_type_id SMALLINT NOT NULL UNIQUE,PRIMARY KEY(id),CONSTRAINT foreignkey_resolved_news_type_id FOREIGN KEY fk_resolved_news_type_id(resolved_news_type_id)REFERENCES resolved_news_type(id),CONSTRAINT foreignkey_unresolved_news_type_id FOREIGN KEY fk_unresolved_news_type_id(unresolved_news_type_id)REFERENCES unresolved_news_type(id));
+
+mysql> describe map_unresolved_resolved_news_type_map;
++-------------------------+-------------+------+-----+---------+----------------+
+| Field                   | Type        | Null | Key | Default | Extra          |
++-------------------------+-------------+------+-----+---------+----------------+
+| id                      | smallint(6) | NO   | PRI | NULL    | auto_increment |
+| resolved_news_type_id   | smallint(6) | NO   | MUL | NULL    |                |
+| unresolved_news_type_id | smallint(6) | NO   | UNI | NULL    |                |
++-------------------------+-------------+------+-----+---------+----------------+
+
+/* Table resolved_location */
+mysql> create table resolved_location(id SMALLINT NOT NULL AUTO_INCREMENT,resolved_location_name varchar(250) UNIQUE,PRIMARY KEY(id));
+
+mysql> describe resolved_location;
++------------------------+--------------+------+-----+---------+----------------+
+| Field                  | Type         | Null | Key | Default | Extra          |
++------------------------+--------------+------+-----+---------+----------------+
+| id                     | smallint(6)  | NO   | PRI | NULL    | auto_increment |
+| resolved_location_name | varchar(250) | YES  | UNI | NULL    |                |
++------------------------+--------------+------+-----+---------+----------------+
+
+/* Table unresolved_location */
+mysql> create table unresolved_location(id SMALLINT NOT NULL AUTO_INCREMENT,unresolved_location_name varchar(250),PRIMARY KEY(id));
+
+mysql> describe unresolved_location;
++--------------------------+--------------+------+-----+---------+----------------+
+| Field                    | Type         | Null | Key | Default | Extra          |
++--------------------------+--------------+------+-----+---------+----------------+
+| id                       | smallint(6)  | NO   | PRI | NULL    | auto_increment |
+| unresolved_location_name | varchar(250) | YES  |     | NULL    |                |
++--------------------------+--------------+------+-----+---------+----------------+
+
+/* Table map_unresolved_resolved_location */
+mysql> create table map_unresolved_resolved_location(id SMALLINT NOT NULL AUTO_INCREMENT,resolved_location_id SMALLINT NOT NULL,INDEX(resolved_location_id),unresolved_location_id SMALLINT NOT NULL UNIQUE,PRIMARY KEY(id),CONSTRAINT foreignkey_resolved_location_id FOREIGN KEY fk_resolved_location_id(resolved_location_id)REFERENCES resolved_location(id),CONSTRAINT foreignkey_unresolved_location_id FOREIGN KEY fk_unresolved_location_id(unresolved_location_id)REFERENCES unresolved_location(id));
+
+mysql> describe map_unresolved_resolved_location;
++------------------------+-------------+------+-----+---------+----------------+
+| Field                  | Type        | Null | Key | Default | Extra          |
++------------------------+-------------+------+-----+---------+----------------+
+| id                     | smallint(6) | NO   | PRI | NULL    | auto_increment |
+| resolved_location_id   | smallint(6) | NO   | MUL | NULL    |                |
+| unresolved_location_id | smallint(6) | NO   | UNI | NULL    |                |
++------------------------+-------------+------+-----+---------+----------------+
+
+/* Table source */
+mysql> create table source(id SMALLINT NOT NULL AUTO_INCREMENT,source_name varchar(250) NOT NULL UNIQUE,source_url varchar(250) NOT NULL,PRIMARY KEY(id));
+
+mysql> describe source;
++-------------+--------------+------+-----+---------+----------------+
+| Field       | Type         | Null | Key | Default | Extra          |
++-------------+--------------+------+-----+---------+----------------+
+| id          | smallint(6)  | NO   | PRI | NULL    | auto_increment |
+| source_name | varchar(250) | NO   | UNI | NULL    |                |
+| source_url  | varchar(250) | NO   |     | NULL    |                |
++-------------+--------------+------+-----+---------+----------------+
+
+/* Table author */
+mysql> create table author(id SMALLINT NOT NULL AUTO_INCREMENT,author_name varchar(250),source_id SMALLINT NOT NULL,INDEX(source_id),constraint foreignkey_source_id FOREIGN KEY fk_source_id(source_id) REFERENCES source(id),PRIMARY KEY(id));
+
+mysql> describe author;
++-------------+--------------+------+-----+---------+----------------+
+| Field       | Type         | Null | Key | Default | Extra          |
++-------------+--------------+------+-----+---------+----------------+
+| id          | smallint(6)  | NO   | PRI | NULL    | auto_increment |
+| author_name | varchar(250) | NO   | UNI | NULL    |                |
+| source_id   | smallint(6)  | NO   | MUL | NULL    |                |
++-------------+--------------+------+-----+---------+----------------+
+
+/* Table article_download */
+mysql> create table article_download(id INT NOT NULL AUTO_INCREMENT,local_file_path varchar(250),article_download_created_date DATETIME NOT NULL,article_download_last_updated DATETIME NOT NULL,is_parsed TINYINT,PRIMARY KEY(id)); 
+
+mysql> describe article_download;
++-------------------------------+--------------+------+-----+---------+----------------+
+| Field                         | Type         | Null | Key | Default | Extra          |
++-------------------------------+--------------+------+-----+---------+----------------+
+| id                            | int(11)      | NO   | PRI | NULL    | auto_increment |
+| local_file_path               | varchar(250) | YES  |     | NULL    |                |
+| article_download_created_date | datetime     | NO   |     | NULL    |                |
+| article_download_last_updated | datetime     | NO   |     | NULL    |                |
+| is_parsed                     | tinyint(4)   | YES  |     | NULL    |                |
++-------------------------------+--------------+------+-----+---------+----------------+
+
+/* Table article_parsed */
+mysql> create table article_parsed(id INT NOT NULL AUTO_INCREMENT,PRIMARY KEY(id),article_title varchar(250) NOT NULL,unresolved_news_type_id SMALLINT NOT NULL,CONSTRAINT foreignkey_parseTB_unresolved_news_type_id FOREIGN KEY fk_parseTB_unresolved_news_type_id(unresolved_news_type_id) REFERENCES unresolved_news_type(id),url varchar(250) NOT NULL,published_date DATETIME NOT NULL,created_date DATETIME NOT NULL,last_updated_date DATETIME NOT NULL,unresolved_location_id SMALLINT NOT NULL,CONSTRAINT foreignkey_parseTB_unresolved_location_id FOREIGN KEY fk_parseTB_unresolved_location_id(unresolved_location_id) REFERENCES unresolved_location(id),author_id SMALLINT NOT NULL,CONSTRAINT foreignkey_parseTB_author_id FOREIGN KEY fk_parseTB_author_id(author_id) REFERENCES author(id),source_id SMALLINT NOT NULL,CONSTRAINT foreignkey_parseTB_source_id FOREIGN KEY fk_parseTB_source_id(source_id) REFERENCES source(id),article_download_id INT NOT NULL,CONSTRAINT foreignkey_parseTB_article_download_id FOREIGN KEY fk_parseTB_article_download_id(article_download_id) REFERENCES article_download(id),unique_id INT NOT NULL UNIQUE);
+
+mysql> describe article_parsed;
++-------------------------+--------------+------+-----+---------+----------------+
+| Field                   | Type         | Null | Key | Default | Extra          |
++-------------------------+--------------+------+-----+---------+----------------+
+| id                      | int(11)      | NO   | PRI | NULL    | auto_increment |
+| article_title           | varchar(250) | NO   |     | NULL    |                |
+| unresolved_news_type_id | smallint(6)  | NO   | MUL | NULL    |                |
+| url                     | varchar(250) | NO   |     | NULL    |                |
+| published_date          | datetime     | NO   |     | NULL    |                |
+| created_date            | datetime     | NO   |     | NULL    |                |
+| last_updated_date       | datetime     | NO   |     | NULL    |                |
+| unresolved_location_id  | smallint(6)  | NO   | MUL | NULL    |                |
+| author_id               | smallint(6)  | NO   | MUL | NULL    |                |
+| source_id               | smallint(6)  | NO   | MUL | NULL    |                |
+| article_download_id     | int(11)      | NO   | MUL | NULL    |                |
+| unique_id               | int(11)      | NO   | UNI | NULL    |                |
++-------------------------+--------------+------+-----+---------+----------------+
+
+/* Table article_content */
+mysql> create table article_content(id INT NOT NULL AUTO_INCREMENT,PRIMARY KEY(id),article_parsed_id INT NOT NULL,CONSTRAINT foreignkey_artilce_parsed_id FOREIGN KEY fk_article_parsed_id(article_parsed_id) REFERENCES article_parsed(id),content TEXT);
+
+mysql> describe article_content;
++-------------------+---------+------+-----+---------+----------------+
+| Field             | Type    | Null | Key | Default | Extra          |
++-------------------+---------+------+-----+---------+----------------+
+| id                | int(11) | NO   | PRI | NULL    | auto_increment |
+| article_parsed_id | int(11) | NO   | MUL | NULL    |                |
+| content           | text    | YES  |     | NULL    |                |
++-------------------+---------+------+-----+---------+----------------+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
