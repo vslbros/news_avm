@@ -8,3 +8,6 @@ def test_func_vineet():
   print "This is function belongs to vineet"
   
   
+def test_akshay():
+  print "created by akshay"
+
